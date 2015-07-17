@@ -1,1 +1,3 @@
 hello_world/.snakemake
+one_sample_location/.snakemake
+one_sample_location/*.RDS
