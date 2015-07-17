@@ -1,0 +1,13 @@
+# simple Snakemake file with two rules
+# usage: $ snakemake hello
+# should run the R script hello_world.R to create the file hello_world.txt
+# then $ snakemake clean 
+# will remove the file
+
+rule clean:
+    shell: 'rm hello_world.txt'
+
+rule hello:
+    output: "hello_world.txt"
+    shell: "Rscript hello_world.R hello_world.txt"
+	
