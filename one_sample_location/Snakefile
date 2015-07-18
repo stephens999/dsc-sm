@@ -1,11 +1,17 @@
-rule rnorm:
-    output: "input.RDS" , "meta.RDS"
-    shell: "Rscript R/rnorm.R 1000 0 input.RDS meta.RDS"
+rule all:
+    input: "score/rnorm/mean/MSE/score.1.RDS" 
 
-rule mean:
-    output: "output.RDS"
-    shell: "Rscript R/mean.R input.RDS output.RDS"
+rule run_scenario:
+    output: "input/{scenario}/input.{seed}.RDS", "meta/{scenario}/meta.{seed}.RDS"
+    shell: "Rscript R/scenarios/{wildcards.scenario}.R 1000 0 {output}"
 
-rule score:
-    output: "score.RDS"
-    shell: "Rscript R/score.R output.RDS meta.RDS score.RDS"
+rule run_method:
+    input: "input/{scenario}/input.{seed}.RDS"
+    output: "output/{scenario}/{method}/output.{seed}.RDS"
+    shell: "Rscript R/methods/{wildcards.method}.R {input} {output}"
+
+rule run_score:
+    input: "output/{scenario}/{method}/output.{seed}.RDS", "meta/{scenario}/meta.{seed}.RDS"
+    output: "score/{scenario}/{method}/{score}/score.{seed}.RDS"
+    shell: "Rscript R/scores/{wildcards.score}.R {input} {output}"
+

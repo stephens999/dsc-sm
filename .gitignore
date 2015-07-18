@@ -1,3 +1,7 @@
 hello_world/.snakemake
 one_sample_location/.snakemake
 one_sample_location/*.RDS
+one_sample_location/meta
+one_sample_location/output
+one_sample_location/input
+one_sample_location/score

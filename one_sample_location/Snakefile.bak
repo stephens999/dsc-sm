@@ -1,0 +1,11 @@
+rule rnorm:
+    output: "input.RDS" , "meta.RDS"
+    shell: "Rscript R/rnorm.R 1000 0 input.RDS meta.RDS"
+
+rule mean:
+    output: "output.RDS"
+    shell: "Rscript R/mean.R input.RDS output.RDS"
+
+rule score:
+    output: "score.RDS"
+    shell: "Rscript R/score.R output.RDS meta.RDS score.RDS"
