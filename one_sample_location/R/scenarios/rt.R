@@ -8,7 +8,7 @@ mean = as.numeric(args[2])
 datafile = args[3]
 metafile = args[4]
 
-x=rt(n,mean=mean,df=2)
+x=mean+rt(n,df=2)
 saveRDS(x,datafile)
 saveRDS(mean,metafile)
 
