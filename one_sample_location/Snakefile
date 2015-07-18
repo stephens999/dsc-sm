@@ -1,13 +1,14 @@
 # main things to fix
 #  - need way to specify scripts for different rules (eg scenarios, methods etc)
-#  - need to find way to specify all the target files
 #  - need to find way to set seeds
 
+SEEDS = [1,2,3,4,5]
+SCENARIOS = ["rnorm","rt"]
 METHODS = ["mean","median"]
+SCORES = ["MSE"]
 
 rule all:
-    input: expand("score/rnorm/{method}/MSE/score.1.RDS",method=METHODS)
-#"score/rnorm/mean/MSE/score.1.RDS", "score/rnorm/median/MSE/score.1.RDS" 
+    input: expand("score/{scenario}/{method}/{score}/score.{seed}.RDS",scenario=SCENARIOS,method=METHODS,score=SCORES,seed=SEEDS)
 
 rule clean:
     shell: "rm -r meta; rm -r output; rm -r input; rm -r score"
