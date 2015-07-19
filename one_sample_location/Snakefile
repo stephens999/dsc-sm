@@ -1,5 +1,4 @@
 # main things to fix
-#  - need way to specify scripts for different rules (eg scenarios, methods etc)
 #  - need to find way to set seeds
 
 SEEDS = [1,2,3,4,5]
