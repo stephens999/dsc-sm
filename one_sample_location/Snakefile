@@ -3,15 +3,21 @@
 #  - need to find way to set seeds
 
 SEEDS = [1,2,3,4,5]
-SCENARIOS = ["rnorm0","rnorm1","rt"]
-METHODS = ["mean","median"]
 SCORES = ["MSE"]
 
 # set up script commands for each scenario, used in run_scenario
-CMDS = {}
-CMDS["rnorm0"] = "Rscript R/scenarios/rnorm.R 1000 0"
-CMDS["rnorm1"] = "Rscript R/scenarios/rnorm.R 1000 1"
-CMDS["rt"] = "Rscript R/scenarios/rt.R 1000 0"
+SCENARIO_CMDS = {}
+SCENARIO_CMDS["rnorm0"] = "Rscript R/scenarios/rnorm.R 1000 0"
+SCENARIO_CMDS["rnorm1"] = "Rscript R/scenarios/rnorm.R 1000 1"
+SCENARIO_CMDS["rt"] = "Rscript R/scenarios/rt.R 1000 0"
+
+METHOD_CMDS = {}
+METHOD_CMDS["mean"] = "Rscript R/methods/mean.R"
+METHOD_CMDS["median"] = "Rscript R/methods/median.R"
+
+
+SCENARIOS = SCENARIO_CMDS.keys()
+METHODS = METHOD_CMDS.keys()
 
 rule all:
     input: expand("score/{scenario}/{method}/{score}/score.{seed}.RDS",scenario=SCENARIOS,method=METHODS,score=SCORES,seed=SEEDS)
@@ -22,13 +28,15 @@ rule clean:
 rule run_scenario:
     output: "input/{scenario}/input.{seed}.RDS", "meta/{scenario}/meta.{seed}.RDS"
     run: 
-        shstring = "%s {output}" % CMDS[wildcards.scenario]
+        shstring = "%s {output}" % SCENARIO_CMDS[wildcards.scenario]
         shell(shstring)
 
 rule run_method:
     input: "input/{scenario}/input.{seed}.RDS"
     output: "output/{scenario}/{method}/output.{seed}.RDS"
-    shell: "Rscript R/methods/{wildcards.method}.R {input} {output}"
+    run: 
+        shstring = "%s {input} {output}" % METHOD_CMDS[wildcards.method]
+        shell(shstring)
 
 rule run_score:
     input: "output/{scenario}/{method}/output.{seed}.RDS", "meta/{scenario}/meta.{seed}.RDS"
