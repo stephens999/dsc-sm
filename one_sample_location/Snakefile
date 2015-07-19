@@ -3,7 +3,6 @@
 #  - need to find way to set seeds
 
 SEEDS = [1,2,3,4,5]
-SCORES = ["MSE"]
 
 # set up script commands for each scenario, used in run_scenario
 SCENARIO_CMDS = {}
@@ -15,9 +14,12 @@ METHOD_CMDS = {}
 METHOD_CMDS["mean"] = "Rscript R/methods/mean.R"
 METHOD_CMDS["median"] = "Rscript R/methods/median.R"
 
+SCORE_CMDS = {}
+SCORE_CMDS["MSE"] = "Rscript R/scores/MSE.R"
 
 SCENARIOS = SCENARIO_CMDS.keys()
 METHODS = METHOD_CMDS.keys()
+SCORES = SCORE_CMDS.keys()
 
 rule all:
     input: expand("score/{scenario}/{method}/{score}/score.{seed}.RDS",scenario=SCENARIOS,method=METHODS,score=SCORES,seed=SEEDS)
@@ -41,5 +43,6 @@ rule run_method:
 rule run_score:
     input: "output/{scenario}/{method}/output.{seed}.RDS", "meta/{scenario}/meta.{seed}.RDS"
     output: "score/{scenario}/{method}/{score}/score.{seed}.RDS"
-    shell: "Rscript R/scores/{wildcards.score}.R {input} {output}"
-
+    run: 
+        shstring = "%s {input} {output}" % SCORE_CMDS[wildcards.score]
+        shell(shstring)
