@@ -1,5 +1,5 @@
 # main things to fix
-#  - need to find way to set seeds
+#  - need to find way to set seeds; possibly pass seed to Rscript command in environment?
 
 SEEDS = [1,2,3,4,5]
 
